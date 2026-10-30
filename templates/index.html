@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MCP-Powered AI Calculator Assistant</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- Markdown Renderer -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-left">
+        <div class="logo-icon">🧮</div>
+        <div>
+          <h1>MCP AI Calculator</h1>
+          <p class="subtitle">Model Context Protocol • AI Math Assistant</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <span class="status-pill connected" id="serverStatus">
+          <span class="status-dot"></span> MCP Server Active
+        </span>
+        <span class="mode-badge" id="modeBadge">Smart Agent</span>
+        <button class="icon-button" id="openSettingsBtn" title="Settings & API Key">⚙️ Config</button>
+      </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <div class="main-workspace">
+      <!-- Left Sidebar: Tools & History -->
+      <aside class="sidebar">
+        <!-- Tools Section -->
+        <div class="sidebar-section">
+          <div class="section-header">
+            <h3>⚡ MCP Server Tools</h3>
+            <span class="badge" id="toolCount">0</span>
+          </div>
+          <div class="tools-list" id="toolsList">
+            <div class="loading-state">Loading MCP tools...</div>
+          </div>
+        </div>
+
+        <!-- History Section -->
+        <div class="sidebar-section history-section">
+          <div class="section-header">
+            <h3>🕒 Server History</h3>
+            <button class="clear-btn" id="clearHistoryBtn" title="Clear History">Clear</button>
+          </div>
+          <div class="history-list" id="historyList">
+            <div class="empty-state">No calculations yet</div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Chat Container -->
+      <main class="chat-container">
+        <!-- Welcome Hero Banner -->
+        <div class="welcome-hero" id="welcomeHero">
+          <div class="hero-badge">Model Context Protocol Architecture</div>
+          <h2>Intelligent Math Powered by MCP</h2>
+          <p>
+            Ask natural language math questions, financial models, statistics, or unit conversions. 
+            The AI assistant reasons and calls verified <strong>MCP Tools</strong> over stdio JSON-RPC.
+          </p>
+
+          <div class="prompt-chips-label">Try an example:</div>
+          <div class="prompt-chips">
+            <button class="chip" data-query="(45 * 12) + sqrt(144) / 4">
+              📐 (45 * 12) + sqrt(144) / 4
+            </button>
+            <button class="chip" data-query="Calculate compound interest on $10,000 at 5% for 3 years compounded monthly">
+              💰 Compound Interest ($10k @ 5% for 3y)
+            </button>
+            <button class="chip" data-query="Monthly EMI for a loan of $300,000 at 6.5% interest over 30 years">
+              🏡 Mortgage EMI ($300k @ 6.5% 30y)
+            </button>
+            <button class="chip" data-query="Convert 100 miles to kilometers">
+              🔄 100 miles to km
+            </button>
+            <button class="chip" data-query="Find the mean and standard deviation of [12, 18, 25, 30, 42]">
+              📊 Statistics of [12, 18, 25, 30, 42]
+            </button>
+          </div>
+        </div>
+
+        <!-- Message History -->
+        <div class="messages-list" id="messagesList"></div>
+
+        <!-- Chat Input Bar -->
+        <div class="input-container">
+          <form id="chatForm" class="chat-form">
+            <input 
+              type="text" 
+              id="userInput" 
+              class="chat-input" 
+              placeholder="Ask a calculation (e.g., '15% tip on 85 dollars', 'sqrt(256) * 4', '50 miles to km')..."
+              autocomplete="off"
+              required
+            />
+            <button type="submit" id="sendBtn" class="send-button">
+              <span>Calculate</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="22" y1="2" x2="11" y2="13"></line>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+              </svg>
+            </button>
+          </form>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div class="modal-backdrop" id="settingsModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Assistant Configuration</h3>
+        <button class="close-modal-btn" id="closeSettingsBtn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-desc">
+          The assistant operates in <strong>Dual Mode</strong>:
+        </p>
+        <ul class="mode-bullets">
+          <li><strong>Smart Agent Mode (Active by default):</strong> Runs 100% locally with zero setup, parsing queries into MCP tools directly.</li>
+          <li><strong>Gemini LLM Mode:</strong> Enter a Gemini API key below to enable full LLM conversational reasoning with function calling.</li>
+        </ul>
+
+        <div class="form-group">
+          <label for="apiKeyInput">Google Gemini API Key (Optional)</label>
+          <input 
+            type="password" 
+            id="apiKeyInput" 
+            class="modal-input" 
+            placeholder="AIzaSy..." 
+          />
+          <small class="help-text">Leave blank to use the built-in Smart Agent mode.</small>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="cancelSettingsBtn">Close</button>
+        <button class="btn btn-primary" id="saveSettingsBtn">Save & Apply</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
